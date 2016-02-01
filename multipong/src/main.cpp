@@ -3,6 +3,7 @@
 #include <iostream>
 #include <SDL_net.h>
 #include "Game.h"
+#include "Red.h"
 
 int main(int argc, char** argv){
     if (SDL_Init(SDL_INIT_VIDEO) != 0){
@@ -19,18 +20,23 @@ int main(int argc, char** argv){
         std::cout << "Ventana Inicializada" << std::endl;
     }
 
-    Red* red = new Red();
-
-    int salida = red->inicia();
-
-    if(salida<0){
-        return salida;
-    }
-
     SDL_Surface *sur = SDL_GetWindowSurface(win);
 
+    //Creamos conexion de red
+    Red red;
+    red.inicia();
+
+    bool somosServidor = false;
+    //si somos servidor
+    if(somosServidor){
+        red.iniciaServidor();
+    }else{
+        red.iniciaCliente("127.0.0.1", 9999);
+    }
+
+
     Game* game = new Game();
-    game->play(win, sur);
+    game->play(win, sur, &red);
 
     SDL_DestroyWindow(win);
     SDL_Quit();

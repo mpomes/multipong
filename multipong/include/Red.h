@@ -1,7 +1,7 @@
 #ifndef RED_H
 #define RED_H
 #include <iostream>
-
+#include "SDL_net.h"
 
 class Red
 {
@@ -13,9 +13,13 @@ class Red
 
         int iniciaServidor();
 
-        int iniciaCliente(std::string host, std::string port);
+        int iniciaCliente(std::string host, int port);
+
+        int playerNumber;
 
     protected:
+        int connectedClients;
+        TCPsocket clientes[3];
 
     private:
 };

@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Red.h"
 
 #define DESPLAZAMIENTO 3
 
@@ -13,8 +14,7 @@ Game::~Game()
     //dtor
 }
 
-int Game::play(SDL_Window *win, SDL_Surface* sur){
-    //Iniciamos red (cliente/servidor)
+int Game::play(SDL_Window *win, SDL_Surface* sur, Red* red){
 
     bool salir = false;
     while(!salir){

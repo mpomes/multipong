@@ -2,6 +2,7 @@
 #define GAME_H
 #include "Pala.h"
 #include "Input.h"
+#include "Red.h"
 
 class Game
 {
@@ -9,7 +10,7 @@ class Game
         Game();
         virtual ~Game();
 
-        int play(SDL_Window *win, SDL_Surface* sur);
+        int play(SDL_Window *win, SDL_Surface* sur, Red * red);
 
     protected:
 
