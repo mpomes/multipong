@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1454335675 source:d:\jandujar\multipong\multipong\src\main.cpp
+	"SDL.h"
+	<stdio.h>
+	<iostream>
+
