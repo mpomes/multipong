@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <SDL_net.h>
+#include "Game.h"
 
 int main(int argc, char** argv){
     if (SDL_Init(SDL_INIT_VIDEO) != 0){
@@ -9,27 +10,18 @@ int main(int argc, char** argv){
         return 1;
     }
 
-    SDL_Window *win = SDL_CreateWindow("Hello World!", 100, 100, 640, 480, SDL_WINDOW_SHOWN);
+    SDL_Window *win = SDL_CreateWindow("Multipong!", 100, 100, 640, 480, SDL_WINDOW_SHOWN);
     if (win == nullptr){
         std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
         SDL_Quit();
         return 1;
     }
 
-    SDL_Renderer *ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if (ren == nullptr){
-        SDL_DestroyWindow(win);
-        std::cout << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
-        SDL_Quit();
-        return 1;
-    }
+    SDL_Surface *sur = SDL_GetWindowSurface(win);
 
-    while(true){
+    Game* game = new Game();
+    game->play(win, sur);
 
-    }
-
-    //SDL_DestroyTexture(tex);
-    SDL_DestroyRenderer(ren);
     SDL_DestroyWindow(win);
     SDL_Quit();
 
