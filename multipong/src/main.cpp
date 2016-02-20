@@ -23,6 +23,13 @@ int main(int argc, char** argv){
 
     bool somosServidor = false;
 
+    #ifdef SERVIDOR
+        somosServidor = true;
+        std::cout << "SOMOS SERVIDOR" << SDL_GetError() << std::endl;
+    #else
+        std::cout << "SOMOS CLIENTE" << SDL_GetError() << std::endl;
+    #endif // SERVIDOR
+
     //Creamos conexion de red
     Red red;
     red.inicia();
