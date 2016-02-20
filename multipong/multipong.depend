@@ -1,0 +1,20 @@
+# depslib dependency file v1.0
+1454437494 source:d:\jandujar\multipong\multipong\src\main.cpp
+	<SDL.h>
+	<stdio.h>
+	<iostream>
+	"Red.h"
+
+1454437172 d:\jandujar\multipong\multipong\include\red.h
+	"SDL_net.h"
+	<vector>
+	<string.h>
+	<string>
+	<stdio.h>
+
+1454437470 source:d:\jandujar\multipong\multipong\src\red.cpp
+	"Red.h"
+	<iostream>
+	<stdlib.h>
+	<cstring>
+
