@@ -31,16 +31,17 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-std=c++11" />
-			<Add directory="../../libs/SDL2-2.0.4/i686-w64-mingw32/include/SDL2" />
-			<Add directory="../../libs/SDL2_net-2.0.1/i686-w64-mingw32/include/SDL2" />
+			<Add directory="libs/SDL2-2.0.4/i686-w64-mingw32/include/SDL2" />
+			<Add directory="libs/SDL2_net-2.0.1/i686-w64-mingw32/include/SDL2" />
+			<Add directory="include" />
 		</Compiler>
 		<Linker>
 			<Add option="-lmingw32 -lSDL2main -lSDL2 -lSDL2_net" />
-			<Add library="../../libs/SDL2-2.0.4/i686-w64-mingw32/lib/libSDL2.a" />
-			<Add library="../../libs/SDL2-2.0.4/i686-w64-mingw32/lib/libSDL2main.a" />
-			<Add library="../../libs/SDL2_net-2.0.1/i686-w64-mingw32/lib/libSDL2_net.a" />
-			<Add directory="../../libs/SDL2-2.0.4/i686-w64-mingw32/lib" />
-			<Add directory="../../libs/SDL2_net-2.0.1/i686-w64-mingw32/lib" />
+			<Add library="libs/SDL2-2.0.4/i686-w64-mingw32/lib/libSDL2.a" />
+			<Add library="libs/SDL2-2.0.4/i686-w64-mingw32/lib/libSDL2main.a" />
+			<Add library="libs/SDL2_net-2.0.1/i686-w64-mingw32/lib/libSDL2_net.a" />
+			<Add directory="libs/SDL2-2.0.4/i686-w64-mingw32/lib" />
+			<Add directory="libs/SDL2_net-2.0.1/i686-w64-mingw32/lib" />
 		</Linker>
 		<Unit filename="include/Red.h" />
 		<Unit filename="include/main.h" />
