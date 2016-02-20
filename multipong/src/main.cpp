@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <iostream>
 #include "Red.h"
+#include "Game.h"
 
 int main(int argc, char** argv){
     if (SDL_Init(SDL_INIT_VIDEO) != 0){
@@ -18,9 +19,6 @@ int main(int argc, char** argv){
         std::cout << "Ventana Inicializada" << std::endl;
     }
 
-    SDL_Surface *sur = SDL_GetWindowSurface(win);
-
-
     bool somosServidor = false;
 
     #ifdef SERVIDOR
@@ -30,18 +28,14 @@ int main(int argc, char** argv){
         std::cout << "SOMOS CLIENTE" << SDL_GetError() << std::endl;
     #endif // SERVIDOR
 
-    //Creamos conexion de red
-    Red red;
-    red.inicia();
+    //Creamos clase que se encargará del juego
+    Game game;
 
     //si somos servidor
     if(somosServidor){
-        red.iniciaServidor(9999);
-
-        red.esperaClientes(1);
+        game.iniciaServidorJugador(win, 2, 9999);
     }else{
-        red.iniciaCliente("localhost", 9999);
-
+        game.iniciaCliente(win,"localhost",9999);
     }
 
 
