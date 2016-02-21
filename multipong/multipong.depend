@@ -18,18 +18,19 @@
 	<stdlib.h>
 	<cstring>
 
-1456089753 source:c:\users\jandujar\desktop\multipong\multipong\src\red.cpp
+1456092024 source:c:\users\jandujar\desktop\multipong\multipong\src\red.cpp
 	"Red.h"
 	<iostream>
 	<stdlib.h>
 	<cstring>
 
-1456089307 c:\users\jandujar\desktop\multipong\multipong\include\red.h
+1456091826 c:\users\jandujar\desktop\multipong\multipong\include\red.h
 	"SDL_net.h"
 	<vector>
 	<string.h>
 	<string>
 	<stdio.h>
+	"Constants.h"
 
 1451807846 c:\users\jandujar\desktop\multipong\multipong\libs\sdl2_net-2.0.1\i686-w64-mingw32\include\sdl2\sdl_net.h
 	<stdint.h>
@@ -362,7 +363,7 @@
 	"Game.h"
 	<stdio.h>
 
-1456089595 c:\users\jandujar\desktop\multipong\multipong\include\game.h
+1456091724 c:\users\jandujar\desktop\multipong\multipong\include\game.h
 	"Red.h"
 	"Pala.h"
 	"Bola.h"
@@ -388,7 +389,7 @@
 	"Pala.h"
 	<vector>
 
-1456069347 c:\users\jandujar\desktop\multipong\multipong\include\constants.h
+1456090805 c:\users\jandujar\desktop\multipong\multipong\include\constants.h
 
 1456089904 source:c:\users\jandujar\desktop\multipong\multipong\src\bola.cpp
 	"Bola.h"

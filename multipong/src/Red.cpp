@@ -122,6 +122,15 @@ int Red::recibe(TCPsocket* servidor, char * msg){
     return 0;
 }
 
+int Red::clienteRecibeDatos(char* msg){
+    if(recibe(&tcpsock,msg)>=0){
+        //Recibimos el numero de jugador
+        return 0;
+    }else{
+        return -1;
+    }
+}
+
 int Red::clienteRecibeNumeros(int *numeroJugadores, int *jugador){
     if(recibe(&tcpsock,buffer)>=0){
         sscanf(buffer,"%d %d",numeroJugadores, jugador);
@@ -145,6 +154,24 @@ int Red::servidorEnviaNumeros(TCPsocket * cliente, int numeroJugadores, int nume
     }
 
     std::cout << "Envio numero cliente " << buffer << std::endl;
+
+    return 0;
+}
+
+
+
+int Red::servidorEnviaDatosATodos(char* msg){
+
+    int len = std::strlen(msg)+1;
+
+    for(int i=0; i<connectedClients;i++){
+        int result=SDLNet_TCP_Send(clientes[i],msg,len);
+        if(result<len) {
+            printf("SDLNet_TCP_Send: %s\n", SDLNet_GetError());
+            // It may be good to disconnect sock because it is likely invalid now.
+            //return -1;
+        }
+    }
 
     return 0;
 }

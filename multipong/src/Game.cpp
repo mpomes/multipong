@@ -103,8 +103,11 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
             palas[i]->Render(sur);
         }
 
+        //Servidor envia los datos a todos los clientes
+        servidorEnviaDatos();
+
         SDL_UpdateWindowSurface(win);
-        //SDL_Delay(60);
+        SDL_Delay(25);
     }
 }
 
@@ -134,6 +137,7 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
     bool quit = false;
     int lastTime = SDL_GetTicks();
     int currentTime = SDL_GetTicks();
+    char msg[MAX_BUFFER];
     float deltaTime = 0;
 
     Direcction dir = DIRECTION_NONE;
@@ -142,6 +146,11 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
         currentTime = SDL_GetTicks();
         deltaTime = (float)(currentTime - lastTime) / 1000;
         lastTime = currentTime;
+
+        //Recibo los datos del servidor
+        if(red.clienteRecibeDatos(msg)>=0){
+            clienteCargaDatos(msg);
+        }
 
 
         //Inicio surface
@@ -183,6 +192,7 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
             }
         }
 
+
         //Muevo pala local (la del servidor)
         //palas[0]->Update(deltaTime,dir);
 
@@ -197,6 +207,18 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
         }
 
         SDL_UpdateWindowSurface(win);
-        //SDL_Delay(60);
+        SDL_Delay(25);
     }
+}
+
+void Game::clienteCargaDatos(char* msg){
+    //Que cargamos? la posicion de la bola, la posición de los jugadores x jugadores
+    sscanf(msg,"%d %d %d %d %d %d",&bola.getRect()->x,&bola.getRect()->y,&palas[0]->getRect()->x,&palas[0]->getRect()->y,&palas[1]->getRect()->x,&palas[1]->getRect()->y);
+}
+
+void Game::servidorEnviaDatos(){
+    char datos_enviar[MAX_BUFFER];
+    sprintf(datos_enviar,"%d %d %d %d %d %d",bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y,palas[1]->getRect()->x,palas[1]->getRect()->y);
+
+    red.servidorEnviaDatosATodos(datos_enviar);
 }

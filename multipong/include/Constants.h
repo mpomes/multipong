@@ -5,6 +5,7 @@
 #define WIN_HEIGHT 768
 
 #define MAX_PLAYERS 10
+#define MAX_BUFFER 512
 
 #define PALA_WIDTH 20
 #define PALA_HEIGHT 100
