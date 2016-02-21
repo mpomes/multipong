@@ -168,8 +168,8 @@ void Bola::Gol(){
     dx = dy = 0.0f;
 	speed = 0.4f;
 
-	std::cout << "Angle = " << angle << std::endl;
-	std::cout << "SpeedX = " << speedX << std::endl;
+	//std::cout << "Angle = " << angle << std::endl;
+	//std::cout << "SpeedX = " << speedX << std::endl;
 
 	//nueva direccion
     angle = (angle +180) % 360;

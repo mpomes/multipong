@@ -24,6 +24,7 @@ class Game
         SDL_Surface *sur;
 
         int numPlayers;
+        int playerNumber;
         std::vector<Pala*> palas;
         Bola bola;
 

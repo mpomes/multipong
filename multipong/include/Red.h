@@ -17,12 +17,12 @@ class Red
         int inicia();
         int iniciaServidor(int port);
 
-        int esperaClientes(int nclientes);
+        int esperaClientes(int nclientes, int numeroPlayers, int playerNumInicial);
         int iniciaCliente(std::string host, int port);
 
-        int clienteRecibeNumero();
+        int clienteRecibeNumeros(int *numeroJugadores, int *jugador);
 
-        int servidorEnviaNumero(TCPsocket * cliente, int numero);
+        int servidorEnviaNumeros(TCPsocket * cliente, int numeroJugadores, int numeroCliente);
 
     protected:
         char buffer[MAX_BUFFER];

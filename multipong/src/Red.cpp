@@ -50,8 +50,9 @@ int Red::iniciaServidor(int port){
     return 0;
 }
 
-int Red::esperaClientes(int nclientes){
+int Red::esperaClientes(int nclientes, int numeroPlayers, int playerNumInicial){
     connectedClients = 0;
+    int playerNum = playerNumInicial;
 
     std::cout << "Esperando cliente : " << std::endl;
 
@@ -62,7 +63,8 @@ int Red::esperaClientes(int nclientes){
             //Enviamos el número de cliente
             std::cout << "Cliente conectado :" << connectedClients << std::endl;
 
-            servidorEnviaNumero(&clientes[connectedClients],connectedClients+1);
+            servidorEnviaNumeros(&clientes[connectedClients],numeroPlayers, playerNum);
+            playerNum++;
             connectedClients++;
         }
     }
@@ -87,7 +89,7 @@ int Red::iniciaCliente(std::string host, int port){
 
     //Recibir numero cliente
 
-    return clienteRecibeNumero();
+    return 0;
 }
 
 int Red::envia(TCPsocket* cliente, char* msg){
@@ -120,19 +122,19 @@ int Red::recibe(TCPsocket* servidor, char * msg){
     return 0;
 }
 
-int Red::clienteRecibeNumero(){
+int Red::clienteRecibeNumeros(int *numeroJugadores, int *jugador){
     if(recibe(&tcpsock,buffer)>=0){
-        std::cout << "Numero cliente recibido "<< buffer << std::endl;
+        sscanf(buffer,"%d %d",numeroJugadores, jugador);
+        std::cout << "Numero cliente recibido "<< *jugador << std::endl;
         //Recibimos el numero de jugador
-        int playerNumber = atoi(buffer);
-        return playerNumber;
+        return 0;
     }else{
         return -1;
     }
 }
 
-int Red::servidorEnviaNumero(TCPsocket * cliente, int numero){
-    sprintf(buffer,"%d",numero);
+int Red::servidorEnviaNumeros(TCPsocket * cliente, int numeroJugadores, int numeroCliente){
+    sprintf(buffer,"%d %d",numeroJugadores, numeroCliente);
 
     int len = std::strlen(buffer)+1;
     int result=SDLNet_TCP_Send(*cliente,buffer,len);
