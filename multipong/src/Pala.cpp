@@ -1,5 +1,6 @@
 #include "Pala.h"
 #include "Constants.h"
+#include "math.h"
 
 Pala::Pala()
 {
@@ -32,7 +33,7 @@ void Pala::Init(int _player){
     rect.h = PALA_HEIGHT;
     rect.y = WIN_HEIGHT/2;
 
-	speed = 0.07f;
+	speed = 0.5;
 
 
 	//direcciones
@@ -41,6 +42,31 @@ void Pala::Init(int _player){
 
 //Update para la IA
 void Pala::Update(float deltaTime, Direcction dir){
+
+    if(dir == DIRECTION_UP){
+        delta -= (float)deltaTime * speed * 1000;
+    }else if(dir == DIRECTION_DOWN){
+        delta += (float)deltaTime * speed * 1000;
+    }
+
+    //Si te puedes mover un pixel, lo hace
+    if (fabs(delta) >= 1){
+        int aux = 0;
+        if (delta > 0)
+            aux = (int)(delta + 0.5f);
+        else
+            aux = (int)(delta - 0.5f);
+        rect.y += aux;
+        delta = 0;
+    }
+
+    //Si salimos por arriba o por abajo, recolocamos
+    if(rect.y + rect.h > WIN_HEIGHT){
+        rect.y = WIN_HEIGHT - rect.h;
+    }else if(rect.y < 0 ){
+        rect.y = 0;
+    }
+
 }
 
 //render

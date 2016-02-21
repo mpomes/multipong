@@ -43,23 +43,19 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
     int currentTime = SDL_GetTicks();
     float deltaTime = 0;
 
+    Direcction dir = DIRECTION_NONE;
+
     while(!quit){
         currentTime = SDL_GetTicks();
         deltaTime = (float)(currentTime - lastTime) / 1000;
         lastTime = currentTime;
 
-        //Muevo Bola
-        bola.Update(palas, deltaTime);
+
 
 
         //Inicio surface
         SDL_FillRect(sur,NULL,0);
 
-
-        bola.Render(sur);
-        for(i = 0; i<numPlayers;i++){
-            palas[i]->Render(sur);
-        }
 
         SDL_Event test_event;
         SDL_Scancode tecla;
@@ -71,10 +67,22 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
                     quit = true;
                 }
                 else if(tecla == SDL_SCANCODE_UP){
-                    //dir = 1;
+                    dir = DIRECTION_UP;
                 }
                 else if(tecla == SDL_SCANCODE_DOWN){
-                    //dir = -1;
+                    dir = DIRECTION_DOWN;
+                }
+                break;
+            case SDL_KEYUP:
+                tecla = test_event.key.keysym.scancode;
+                if (tecla == SDL_SCANCODE_ESCAPE){
+                    quit = true;
+                }
+                else if(tecla == SDL_SCANCODE_UP){
+                    dir = DIRECTION_NONE;
+                }
+                else if(tecla == SDL_SCANCODE_DOWN){
+                    dir = DIRECTION_NONE;
                 }
                 break;
 
@@ -84,8 +92,21 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
             }
         }
 
+        //Muevo pala local (la del servidor)
+        palas[0]->Update(deltaTime,dir);
+
+        //Muevo Bola
+        bola.Update(palas, deltaTime);
+
+
+        //Render de cosas
+        bola.Render(sur);
+        for(i = 0; i<numPlayers;i++){
+            palas[i]->Render(sur);
+        }
+
         SDL_UpdateWindowSurface(win);
-        SDL_Delay(100);
+        //SDL_Delay(60);
     }
 }
 

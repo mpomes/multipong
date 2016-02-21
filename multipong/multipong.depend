@@ -358,7 +358,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1456070891 source:c:\users\jandujar\desktop\multipong\multipong\src\game.cpp
+1456087941 source:c:\users\jandujar\desktop\multipong\multipong\src\game.cpp
 	"Game.h"
 	<stdio.h>
 
@@ -376,16 +376,24 @@
 	"Game.h"
 	"Constants.h"
 
-1456069367 c:\users\jandujar\desktop\multipong\multipong\include\pala.h
+1456087208 c:\users\jandujar\desktop\multipong\multipong\include\pala.h
 	<SDL.h>
 
-1456069403 source:c:\users\jandujar\desktop\multipong\multipong\src\pala.cpp
+1456087860 source:c:\users\jandujar\desktop\multipong\multipong\src\pala.cpp
 	"Pala.h"
 	"Constants.h"
+	"math.h"
 
 1456070612 c:\users\jandujar\desktop\multipong\multipong\include\bola.h
 	"Pala.h"
 	<vector>
 
 1456069347 c:\users\jandujar\desktop\multipong\multipong\include\constants.h
+
+1456071591 source:c:\users\jandujar\desktop\multipong\multipong\src\bola.cpp
+	"Bola.h"
+	<stdlib.h>
+	<math.h>
+	"Constants.h"
+	<iostream>
 

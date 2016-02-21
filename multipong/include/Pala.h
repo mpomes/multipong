@@ -3,13 +3,13 @@
 
 #include <SDL.h>
 
+typedef enum { DIRECTION_UP = 1, DIRECTION_DOWN = 2, DIRECTION_NONE = 0 } Direcction;
+
 class Pala
 {
     public:
         Pala();
         virtual ~Pala();
-
-        enum Direcction { UP = 1, DOWN = 2, NONE = 0 };
 
         //Initialization
         void Init(int player);

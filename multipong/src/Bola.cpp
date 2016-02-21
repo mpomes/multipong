@@ -175,7 +175,8 @@ void Bola::Gol(){
     angle = (angle +180) % 360;
     speedX = (float)cos(angle*M_PI / 180.0f) * speed ;
     speedY = (float)sin(angle*M_PI / 180.0f) * speed ;
-    rebotandoY = true;
+
+    rebotandoY = rebotandoX =  false;
 }
 
 
