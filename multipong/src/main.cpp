@@ -10,7 +10,7 @@ int main(int argc, char** argv){
         return -1;
     }
 
-    SDL_Window *win = SDL_CreateWindow("Multipong!", 100, 100, 640, 480, SDL_WINDOW_SHOWN);
+    SDL_Window *win = SDL_CreateWindow("Multipong!", 100, 100, 1024, 768, SDL_WINDOW_SHOWN);
     if (win == nullptr){
         std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
         SDL_Quit();

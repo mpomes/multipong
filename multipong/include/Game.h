@@ -3,6 +3,8 @@
 
 
 #include "Red.h"
+#include "Pala.h"
+#include <vector>
 
 
 class Game
@@ -21,6 +23,8 @@ class Game
         SDL_Surface *sur;
 
         int numPlayers;
+        std::vector<Pala*> palas;
+
 
 };
 

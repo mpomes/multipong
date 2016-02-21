@@ -45,8 +45,12 @@
 			<Add directory="libs/SDL2-2.0.4/i686-w64-mingw32/lib" />
 			<Add directory="libs/SDL2_net-2.0.1/i686-w64-mingw32/lib" />
 		</Linker>
+		<Unit filename="include/Game.h" />
+		<Unit filename="include/Pala.h" />
 		<Unit filename="include/Red.h" />
 		<Unit filename="include/main.h" />
+		<Unit filename="src/Game.cpp" />
+		<Unit filename="src/Pala.cpp" />
 		<Unit filename="src/Red.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Extensions>
