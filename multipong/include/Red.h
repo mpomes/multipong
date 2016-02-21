@@ -6,6 +6,7 @@
 #include <string>
 #include <stdio.h>
 #include "Constants.h"
+#include "Pala.h"
 
 class Red
 {
@@ -21,9 +22,11 @@ class Red
 
         int clienteRecibeNumeros(int *numeroJugadores, int *jugador);
         int clienteRecibeDatos(char* msg);
+        int clienteEnviaDireccion(int cliente, int direccion);
 
         int servidorEnviaNumeros(TCPsocket * cliente, int numeroJugadores, int numeroCliente);
         int servidorEnviaDatosATodos(char* msg);
+        int servidorRecibeDatos(std::vector<Pala*> palas, float deltaTime);
 
     protected:
         char buffer[MAX_BUFFER];

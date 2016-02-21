@@ -11,7 +11,20 @@ int main(int argc, char** argv){
         return -1;
     }
 
-    SDL_Window *win = SDL_CreateWindow("Multipong!", 100, 100, WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_SHOWN);
+    char TITLE[1024];
+
+    bool somosServidor = false;
+
+    #ifdef SERVIDOR
+        sprintf(TITLE,"Multipong - Servidor");
+        somosServidor = true;
+        std::cout << "SOMOS SERVIDOR" << SDL_GetError() << std::endl;
+    #else
+        sprintf(TITLE,"Multipong - Cliente");
+        std::cout << "SOMOS CLIENTE" << SDL_GetError() << std::endl;
+    #endif // SERVIDOR
+
+    SDL_Window *win = SDL_CreateWindow(TITLE, 100, 100, WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_SHOWN);
     if (win == nullptr){
         std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
         SDL_Quit();
@@ -19,15 +32,6 @@ int main(int argc, char** argv){
     }else{
         std::cout << "Ventana Inicializada" << std::endl;
     }
-
-    bool somosServidor = false;
-
-    #ifdef SERVIDOR
-        somosServidor = true;
-        std::cout << "SOMOS SERVIDOR" << SDL_GetError() << std::endl;
-    #else
-        std::cout << "SOMOS CLIENTE" << SDL_GetError() << std::endl;
-    #endif // SERVIDOR
 
     //Creamos clase que se encargará del juego
     Game game;

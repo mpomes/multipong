@@ -93,6 +93,9 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
         //Muevo pala local (la del servidor)
         palas[0]->Update(deltaTime,dir);
 
+
+
+
         //Muevo Bola
         bola.Update(palas, deltaTime);
 
@@ -105,6 +108,9 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
 
         //Servidor envia los datos a todos los clientes
         servidorEnviaDatos();
+
+        //Recibo datos de los clientes
+        red.servidorRecibeDatos(palas, deltaTime);
 
         SDL_UpdateWindowSurface(win);
         SDL_Delay(25);
@@ -205,6 +211,9 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
         for(i = 0; i<numPlayers;i++){
             palas[i]->Render(sur);
         }
+
+        //Envio direccion al servidor
+        red.clienteEnviaDireccion(playerNumber, (int)dir);
 
         SDL_UpdateWindowSurface(win);
         SDL_Delay(25);

@@ -101,7 +101,7 @@ int Red::envia(TCPsocket* cliente, char* msg){
         return -1;
     }
 
-    std::cout << "Envio Mensaje " << msg << std::endl;
+    //std::cout << "Envio Mensaje " << msg << std::endl;
 
     return 0;
 }
@@ -109,14 +109,14 @@ int Red::envia(TCPsocket* cliente, char* msg){
 int Red::recibe(TCPsocket* servidor, char * msg){
     int result;
 
-    std::cout << "Esperando Respuesta : " << std::endl;
+    //std::cout << "Esperando Respuesta : " << std::endl;
     result=SDLNet_TCP_Recv(*servidor,msg,MAX_LEN);
     if(result<=0) {
         // An error may have occured, but sometimes you can just ignore it
         // It may be good to disconnect sock because it is likely invalid now.
         return -1;
     }else{
-        std::cout << "Mensaje recibido : " << msg << std::endl;
+        //std::cout << "Mensaje recibido : " << msg << std::endl;
     }
 
     return 0;
@@ -164,12 +164,49 @@ int Red::servidorEnviaDatosATodos(char* msg){
 
     int len = std::strlen(msg)+1;
 
-    for(int i=0; i<connectedClients;i++){
+    for(int i=0; i<connectedClients; i++){
+        //std::cout << "ENVIO : " << msg << std::endl;
         int result=SDLNet_TCP_Send(clientes[i],msg,len);
         if(result<len) {
-            printf("SDLNet_TCP_Send: %s\n", SDLNet_GetError());
+            std::cout << "SDLNet_TCP_Open: " << SDLNet_GetError() << std::endl;
             // It may be good to disconnect sock because it is likely invalid now.
             //return -1;
+        }
+    }
+
+    return 0;
+}
+
+int Red::clienteEnviaDireccion(int cliente, int direccion){
+    sprintf(buffer,"%d %d",cliente, direccion);
+    std::cout << "Cliente envia direccion " << buffer << std::endl;
+    int len = strlen(buffer)+1;
+    int result=SDLNet_TCP_Send(tcpsock,buffer,len);
+    if(result<len) {
+        std::cout << "SDLNet_TCP_Open: " << SDLNet_GetError() << std::endl;
+        // It may be good to disconnect sock because it is likely invalid now.
+        //return -1;
+    }
+
+    //std::cout << "Envio Mensaje " << msg << std::endl;
+
+    return 0;
+}
+
+int Red::servidorRecibeDatos(std::vector<Pala*> palas, float deltaTime){
+    int direccion;
+    int cliente;
+
+
+    for(int i=0;i<connectedClients;i++){
+        if(recibe(&clientes[i],buffer)>=0){
+            //Recibimos datos de un cliente
+            sscanf(buffer,"%d %d",&cliente, &direccion);
+            std::cout << "Recibimos datos en servidor: " << buffer << std::endl;
+            palas[cliente]->Update(deltaTime,(Direcction)direccion);
+
+        }else{
+            std::cout << "SDLNet_TCP_Open: " << SDLNet_GetError() << std::endl;
         }
     }
 
