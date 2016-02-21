@@ -34,12 +34,16 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
     //Esperamos el número de jugadores -1 (porque nosotros somos un jugador)
     red.esperaClientes(numPlayers - 1);
 
+    //Inicio la bola
+    bola.Init();
+
     bool quit = false;
     while(!quit){
         //Inicio surface
         SDL_FillRect(sur,NULL,0);
 
 
+        bola.Render(sur);
         for(i = 0; i<numPlayers;i++){
             palas[i]->Render(sur);
         }

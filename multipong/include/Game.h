@@ -4,6 +4,7 @@
 
 #include "Red.h"
 #include "Pala.h"
+#include "Bola.h"
 #include <vector>
 
 
@@ -24,6 +25,7 @@ class Game
 
         int numPlayers;
         std::vector<Pala*> palas;
+        Bola bola;
 
 
 };

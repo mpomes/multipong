@@ -3,10 +3,6 @@
 
 #include <SDL.h>
 
-#define PALA_WIDTH 20
-#define PALA_HEIGHT 100
-
-
 class Pala
 {
     public:
