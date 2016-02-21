@@ -24,6 +24,7 @@ class Bola
 
     private:
         void Rebote();
+        void Gol();
 
         SDL_Rect rect;
         int angle;

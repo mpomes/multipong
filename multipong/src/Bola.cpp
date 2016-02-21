@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include "Constants.h"
+#include <iostream>
+
 
 Bola::Bola()
 {
@@ -50,7 +52,132 @@ void Bola::Init(){
 
 //Update para la IA
 void Bola::Update(std::vector<Pala*>palas, float deltaTime){
+    //Si no esta ya rebotando (efecto bullet), rebota contra la pared
+    if (!rebotandoY){
+        if (rect.y + rect.h >= WIN_HEIGHT || rect.y <= 0){
+            //nueva direccion
+            angle = 360 -angle;
+            speedX = (float)cos(angle*M_PI / 180.0f) * speed;
+            speedY = (float)sin(angle*M_PI / 180.0f) * speed;
+            rebotandoY = true;
+        }
+    }
+
+    //Si no esta ya rebotando (efecto bullet), rebota contra la tabla
+    for(unsigned int i=0; i < palas.size(); i++){
+            Pala* pala = palas[i];
+
+            //Choca con la tabla
+            if ((rect.x + rect.w >=pala->getRect()->x && rect.x <= (pala->getRect()->x + pala->getRect()->w)) && (rect.y >= pala->getRect()->y && rect.y + rect.h <= pala->getRect()->y + pala->getRect()->h)){
+
+                if(rebotandoX)
+                    break;
+                //Numero del player (impar izquierda, par derecha)
+                if((i+1)%2 != 0){
+                    //Calculo el punto de interseccion con la tabla, y obtengo el angulo y la nueva velocidad
+                //Cuanto mas al centro de la bola, mas recta y mas lenta sale
+                    int intersection = (pala->getRect()->y + (pala->getRect()->h / 2)) - (rect.y + (rect.h / 2));
+                    intersection /= (pala->getRect()->h / 2);	//[-1,1]
+                    int newAngle = abs(intersection * 65) + 10;	//nunca horizontal!
+                    speed += (abs(intersection)  * (MAX_speed - speed)) + speed * 0.05f;
+
+
+                    if (angle <= 180){
+
+                        angle = newAngle;
+                    }
+                    else{
+
+                        angle = 360 - newAngle;
+                    }
+
+                }
+                else{
+                    int intersection = (pala->getRect()->y + (pala->getRect()->h / 2)) - (rect.y + (rect.h / 2));
+                    intersection /= (pala->getRect()->h / 2);
+                    int newAngle = abs(intersection * 65) + 10;	//nunca horizontal!
+                    //speed = (abs(intersection) + 0.2) * MAX_speed;
+                    speed += (abs(intersection)  * (MAX_speed - speed)) + speed * 0.05f;
+
+
+
+
+                    if (angle <= 90){
+
+                        angle = 180 - newAngle;
+                    }
+                    else{
+
+                        angle = 180 + newAngle;
+                    }
+                }
+
+                Rebote();
+            }
+        }
+
+
+    //Actualiza posiciones
+    dx += deltaTime * speedX *1000;
+    dy += deltaTime * speedY * 1000;
+
+    //Si se ha acumulado un pixel de movimiento, se mueve
+    if (fabs(dx) >= 1){
+        int aux = 0;
+        if (dx > 0)
+            aux = (int)(dx + 0.5f);
+        else
+            aux = (int)(dx - 0.5f);
+        rect.x += aux;
+        dx = 0;
+        //Ya no choca contra nada?
+
+    }
+    //Si se ha acumulado un pixel de movimiento, se mueve
+    if (fabs(dy) >= 1){
+
+        int aux = 0;
+        if (dy > 0)
+            aux = (int)(dy + 0.5f);
+        else
+            aux = (int)(dy - 0.5f);
+        rect.y += aux;
+        dy = 0;
+        //Ya no choca contra nada?
+        if (rebotandoY && rect.y + rect.h < WIN_WIDTH && rect.y > 0)
+            rebotandoY = false;
+        //Comprueba si sigue chocando contra un bloque
+    }
+
+    if(rect.x < 0 ){
+        std::cout << "Punto Equipo 2" << std::endl;
+        Gol();
+    }else if(rect.x > WIN_WIDTH){
+        std::cout << "Punto Equipo 1" << std::endl;
+        Gol();
+    }
 }
+
+
+void Bola::Gol(){
+    //Se inicia la bola en el centro y se cambia el angulo de salida
+
+    rect.y = WIN_HEIGHT/2;
+    rect.x = WIN_WIDTH/2;
+
+    dx = dy = 0.0f;
+	speed = 0.4f;
+
+	std::cout << "Angle = " << angle << std::endl;
+	std::cout << "SpeedX = " << speedX << std::endl;
+
+	//nueva direccion
+    angle = (angle +180) % 360;
+    speedX = (float)cos(angle*M_PI / 180.0f) * speed ;
+    speedY = (float)sin(angle*M_PI / 180.0f) * speed ;
+    rebotandoY = true;
+}
+
 
 //render
 void Bola::Render(SDL_Surface* surf){

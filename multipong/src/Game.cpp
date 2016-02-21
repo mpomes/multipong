@@ -1,4 +1,5 @@
 #include "Game.h"
+#include <stdio.h>
 
 Game::Game()
 {
@@ -38,7 +39,19 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
     bola.Init();
 
     bool quit = false;
+    int lastTime = SDL_GetTicks();
+    int currentTime = SDL_GetTicks();
+    float deltaTime = 0;
+
     while(!quit){
+        currentTime = SDL_GetTicks();
+        deltaTime = (float)(currentTime - lastTime) / 1000;
+        lastTime = currentTime;
+
+        //Muevo Bola
+        bola.Update(palas, deltaTime);
+
+
         //Inicio surface
         SDL_FillRect(sur,NULL,0);
 
@@ -72,6 +85,7 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
         }
 
         SDL_UpdateWindowSurface(win);
+        SDL_Delay(100);
     }
 }
 
