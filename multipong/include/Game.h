@@ -5,6 +5,7 @@
 #include "Red.h"
 #include "Pala.h"
 #include "Bola.h"
+#include "Tablero.h"
 #include <vector>
 
 
@@ -30,7 +31,7 @@ class Game
         int playerNumber;
         std::vector<Pala*> palas;
         Bola bola;
-
+        Tablero tablero;
 
 };
 
