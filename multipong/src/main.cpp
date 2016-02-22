@@ -5,7 +5,7 @@
 #include "Game.h"
 #include "Constants.h"
 
-int main(int argc, char** argv){
+int wmain(int argc, char** argv){
     if (SDL_Init(SDL_INIT_VIDEO) != 0){
         std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
         return -1;
