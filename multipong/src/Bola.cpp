@@ -113,7 +113,7 @@ void Bola::Update(std::vector<Pala*>palas, float deltaTime){
                 }
 
                 Rebote();
-            }
+            }else rebotandoX = false;
         }
 
 
