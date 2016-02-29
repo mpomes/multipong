@@ -1,7 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-
+#include <SDL_image.h>
 #include "Red.h"
 #include "Pala.h"
 #include "Bola.h"
@@ -25,7 +25,8 @@ class Game
 
 
         Red red;
-        SDL_Surface *sur;
+        ///SDL_Surface *sur;
+        SDL_Renderer *_gRenderer;
 
         int numPlayers;
         int playerNumber;

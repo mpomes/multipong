@@ -12,14 +12,14 @@ class Bola
         virtual ~Bola();
 
         //Initialization
-        void Init();
+        void Init(SDL_Renderer *renderer);
         void InitMedia();
 
         //Update para la IA
         void Update(std::vector<Pala*>palas, float deltaTime);
 
         //render
-        void Render(SDL_Surface* surf);
+        void Render(SDL_Renderer* renderer);
 
         SDL_Rect* getRect();
     protected:
@@ -37,7 +37,7 @@ class Bola
         SDL_Rect rect;
         int angle;
         float speed, speedX, speedY;
-
+        SDL_Texture *imagen;
         //cantidad de movimiento en x,y
         float dx, dy;
 
