@@ -1,12 +1,9 @@
 #include "Game.h"
-#include "Red.h"
-
-#define DESPLAZAMIENTO 3
+#include <stdio.h>
 
 Game::Game()
 {
     //ctor
-    playernumber = 0;
 }
 
 Game::~Game()
@@ -14,45 +11,229 @@ Game::~Game()
     //dtor
 }
 
-int Game::play(SDL_Window *win, SDL_Surface* sur, Red* red){
 
-    bool salir = false;
-    while(!salir){
-        //Limpiar pantalla
-        SDL_FillRect(sur,NULL,0xffffff);
+void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
+    sur = SDL_GetWindowSurface(win);
 
-        //Obtenemos inputs usuarios
-        input.Update();
-        salir = input.exit;
+    //Iniciamos conexion de red
+    red.inicia();
 
-        //Modificamos palas
-        actualizaJugador();
+    //Definimos el número de jugadores
+    numPlayers = _numberPlayers;
 
-        //Enviamos palas a usuarios
+    //Iniciamos el servidor
+    red.iniciaServidor(9999);
 
-        //Pintamos palas
-        for(int i=0;i<4;i++){
-            Game::palas[i].Render(sur);
-        }
-
-        SDL_UpdateWindowSurface(win);
-
-        //Delay
-        SDL_Delay(10);
+    int i;
+    //Creamos las palas en funcion del numero de jugadores
+    for(i=0; i<numPlayers; i++){
+        Pala *pala = new Pala();
+        pala->Init(i);
+        palas.push_back(pala);
     }
 
-    return 0;
+    //Esperamos el número de jugadores -1 (porque nosotros somos un jugador)
+    red.esperaClientes(numPlayers - 1, numPlayers, 1);
+
+    //Inicio la bola
+    bola.Init();
+    //Inicio el tablero
+    tablero.init(5);
+
+    bool quit = false;
+    int lastTime = SDL_GetTicks();
+    int currentTime = SDL_GetTicks();
+    float deltaTime = 0;
+
+    Direcction dir = DIRECTION_NONE;
+
+    while(!quit){
+        currentTime = SDL_GetTicks();
+        deltaTime = (float)(currentTime - lastTime) / 1000;
+        lastTime = currentTime;
+
+
+        //Inicio surface
+        SDL_FillRect(sur,NULL,0);
+
+
+        SDL_Event test_event;
+        SDL_Scancode tecla;
+        while (SDL_PollEvent(&test_event)) {
+            switch (test_event.type) {
+            case SDL_KEYDOWN:
+                tecla = test_event.key.keysym.scancode;
+                if (tecla == SDL_SCANCODE_ESCAPE){
+                    quit = true;
+                }
+                else if(tecla == SDL_SCANCODE_UP){
+                    dir = DIRECTION_UP;
+                }
+                else if(tecla == SDL_SCANCODE_DOWN){
+                    dir = DIRECTION_DOWN;
+                }
+                break;
+            case SDL_KEYUP:
+                tecla = test_event.key.keysym.scancode;
+                if (tecla == SDL_SCANCODE_ESCAPE){
+                    quit = true;
+                }
+                else if(tecla == SDL_SCANCODE_UP){
+                    dir = DIRECTION_NONE;
+                }
+                else if(tecla == SDL_SCANCODE_DOWN){
+                    dir = DIRECTION_NONE;
+                }
+                break;
+
+            case SDL_QUIT:
+                quit = true;
+                break;
+            }
+        }
+
+        //Muevo pala local (la del servidor)
+        palas[0]->Update(deltaTime,dir);
+
+
+
+
+        //Muevo Bola
+        bola.Update(palas, deltaTime);
+
+
+        //Render de cosas
+        bola.Render(sur);
+        tablero.render(sur);
+        for(i = 0; i<numPlayers;i++){
+            palas[i]->Render(sur);
+        }
+
+        //Servidor envia los datos a todos los clientes
+        servidorEnviaDatos();
+
+        //Recibo datos de los clientes
+        red.servidorRecibeDatos(palas, deltaTime);
+
+        SDL_UpdateWindowSurface(win);
+        SDL_Delay(25);
+    }
 }
 
 
-void Game::actualizaJugador(){
-    if(input.arriba && palas[Game::playernumber].GetY()>DESPLAZAMIENTO){
-            palas[playernumber].SetPosition(palas[playernumber].GetX(),
-                                            palas[playernumber].GetY() - DESPLAZAMIENTO);
+void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
+    sur = SDL_GetWindowSurface(win);
+
+    //Iniciamos conexion de red
+    red.inicia();
+
+    red.iniciaCliente(host, port);
+
+    //Recibo el número de jugadores y el player actual
+    red.clienteRecibeNumeros(&numPlayers, &playerNumber);
+
+    int i;
+    //Creamos las palas en funcion del numero de jugadores
+    for(i=0; i<numPlayers; i++){
+        Pala *pala = new Pala();
+        pala->Init(i);
+        palas.push_back(pala);
     }
 
-    if(input.abajo && palas[Game::playernumber].GetY()<(480 - DESPLAZAMIENTO - 50)){
-            palas[playernumber].SetPosition(palas[playernumber].GetX(),
-                                            palas[playernumber].GetY() + DESPLAZAMIENTO);
+    //Inicio la bola
+    bola.Init();
+    //Inicio el tablero
+    tablero.init(5);
+
+    bool quit = false;
+    int lastTime = SDL_GetTicks();
+    int currentTime = SDL_GetTicks();
+    char msg[MAX_BUFFER];
+    float deltaTime = 0;
+
+    Direcction dir = DIRECTION_NONE;
+
+    while(!quit){
+        currentTime = SDL_GetTicks();
+        deltaTime = (float)(currentTime - lastTime) / 1000;
+        lastTime = currentTime;
+
+        //Recibo los datos del servidor
+        if(red.clienteRecibeDatos(msg)>=0){
+            clienteCargaDatos(msg);
+        }
+
+
+        //Inicio surface
+        SDL_FillRect(sur,NULL,0);
+
+
+        SDL_Event test_event;
+        SDL_Scancode tecla;
+        while (SDL_PollEvent(&test_event)) {
+            switch (test_event.type) {
+            case SDL_KEYDOWN:
+                tecla = test_event.key.keysym.scancode;
+                if (tecla == SDL_SCANCODE_ESCAPE){
+                    quit = true;
+                }
+                else if(tecla == SDL_SCANCODE_UP){
+                    dir = DIRECTION_UP;
+                }
+                else if(tecla == SDL_SCANCODE_DOWN){
+                    dir = DIRECTION_DOWN;
+                }
+                break;
+            case SDL_KEYUP:
+                tecla = test_event.key.keysym.scancode;
+                if (tecla == SDL_SCANCODE_ESCAPE){
+                    quit = true;
+                }
+                else if(tecla == SDL_SCANCODE_UP){
+                    dir = DIRECTION_NONE;
+                }
+                else if(tecla == SDL_SCANCODE_DOWN){
+                    dir = DIRECTION_NONE;
+                }
+                break;
+
+            case SDL_QUIT:
+                quit = true;
+                break;
+            }
+        }
+
+
+        //Muevo pala local (la del servidor)
+        //palas[0]->Update(deltaTime,dir);
+
+        //Muevo Bola
+        //bola.Update(palas, deltaTime);
+
+
+        //Render de cosas
+        bola.Render(sur);
+        tablero.render(sur);
+        for(i = 0; i<numPlayers;i++){
+            palas[i]->Render(sur);
+        }
+
+        //Envio direccion al servidor
+        red.clienteEnviaDireccion(playerNumber, (int)dir);
+
+        SDL_UpdateWindowSurface(win);
+        SDL_Delay(25);
     }
+}
+
+void Game::clienteCargaDatos(char* msg){
+    //Que cargamos? la posicion de la bola, la posición de los jugadores x jugadores y la linea central
+    sscanf(msg,"%d %d %d %d %d %d",&bola.getRect()->x,&bola.getRect()->y,&palas[0]->getRect()->x,&palas[0]->getRect()->y,&palas[1]->getRect()->x,&palas[1]->getRect()->y);
+}
+
+void Game::servidorEnviaDatos(){
+    char datos_enviar[MAX_BUFFER];
+    sprintf(datos_enviar,"%d %d %d %d %d %d",bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y,palas[1]->getRect()->x,palas[1]->getRect()->y);
+
+    red.servidorEnviaDatosATodos(datos_enviar);
 }

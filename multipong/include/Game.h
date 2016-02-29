@@ -1,8 +1,13 @@
 #ifndef GAME_H
 #define GAME_H
-#include "Pala.h"
-#include "Input.h"
+
+
 #include "Red.h"
+#include "Pala.h"
+#include "Bola.h"
+#include "Tablero.h"
+#include <vector>
+
 
 class Game
 {
@@ -10,17 +15,24 @@ class Game
         Game();
         virtual ~Game();
 
-        int play(SDL_Window *win, SDL_Surface* sur, Red * red);
-
+        void iniciaServidorJugador(SDL_Window *win, int numberPlayers, int port);
+        void iniciaCliente(SDL_Window *win, std::string host, int port);
     protected:
 
-        Pala palas[4];
-        Input input;
-        int playernumber;
-
     private:
+        void clienteCargaDatos(char* msg);
+        void servidorEnviaDatos();
 
-        void actualizaJugador();
+
+        Red red;
+        SDL_Surface *sur;
+
+        int numPlayers;
+        int playerNumber;
+        std::vector<Pala*> palas;
+        Bola bola;
+        Tablero tablero;
+
 };
 
 #endif // GAME_H

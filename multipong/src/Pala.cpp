@@ -1,12 +1,10 @@
 #include "Pala.h"
+#include "Constants.h"
+#include "math.h"
 
 Pala::Pala()
 {
     //ctor
-    rec.h = 50;
-    rec.w = 20;
-    rec.x = 0;
-    rec.y = 0;
 }
 
 Pala::~Pala()
@@ -15,19 +13,67 @@ Pala::~Pala()
 }
 
 
-int Pala::GetY(){
-    return rec.y;
+//Initialization
+void Pala::Init(int _player){
+    int _x;
+	player = _player;
+
+	// La posición de la pala va en función del jugador
+	// Si el jugador es %2 == 0, entonces va la izquierda
+	// en caso contrario va a la derecha
+
+	if( (player%2) == 0){
+        _x = PALA_WIDTH + (player/2)* PALA_WIDTH;
+	}else{
+        _x = WIN_WIDTH -2*PALA_WIDTH -PALA_WIDTH*(player/2);
+	}
+
+	rect.x = _x;
+    rect.w = PALA_WIDTH;
+    rect.h = PALA_HEIGHT;
+    rect.y = WIN_HEIGHT/2;
+
+	speed = 0.5;
+
+
+	//direcciones
+	delta = 0;
 }
 
-int Pala::GetX(){
-    return rec.x;
+//Update para la IA
+void Pala::Update(float deltaTime, Direcction dir){
+
+    if(dir == DIRECTION_UP){
+        delta -= (float)deltaTime * speed * 1000;
+    }else if(dir == DIRECTION_DOWN){
+        delta += (float)deltaTime * speed * 1000;
+    }
+
+    //Si te puedes mover un pixel, lo hace
+    if (fabs(delta) >= 1){
+        int aux = 0;
+        if (delta > 0)
+            aux = (int)(delta + 0.5f);
+        else
+            aux = (int)(delta - 0.5f);
+        rect.y += aux;
+        delta = 0;
+    }
+
+    //Si salimos por arriba o por abajo, recolocamos
+    if(rect.y + rect.h > WIN_HEIGHT){
+        rect.y = WIN_HEIGHT - rect.h;
+    }else if(rect.y < 0 ){
+        rect.y = 0;
+    }
+
 }
 
-void Pala::SetPosition(int x, int y){
-    rec.x = x;
-    rec.y = y;
+//render
+void Pala::Render(SDL_Surface* surf){
+    SDL_FillRect(surf,&rect,COLOR_PALA);
 }
 
-void Pala::Render(SDL_Surface *sur){
-    SDL_FillRect(sur,&rec,0x000000);
+SDL_Rect* Pala::getRect(){
+    return &rect;
 }

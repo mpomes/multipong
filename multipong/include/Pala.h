@@ -1,7 +1,9 @@
 #ifndef PALA_H
 #define PALA_H
 
-#include "SDL.h"
+#include <SDL.h>
+
+typedef enum { DIRECTION_UP = 1, DIRECTION_DOWN = 2, DIRECTION_NONE = 0 } Direcction;
 
 class Pala
 {
@@ -9,15 +11,23 @@ class Pala
         Pala();
         virtual ~Pala();
 
-        int GetY();
-        int GetX();
-        void SetPosition(int x, int y);
+        //Initialization
+        void Init(int player);
 
-        void Render(SDL_Surface *sur);
+        //Update para la IA
+        void Update(float deltaTime, Direcction dir);
 
+        //render
+        void Render(SDL_Surface* surf);
+
+        SDL_Rect* getRect();
     protected:
-        SDL_Rect rec;
+
     private:
+        SDL_Rect rect;
+        float speed;
+        float delta;
+        int player;
 };
 
 #endif // PALA_H
