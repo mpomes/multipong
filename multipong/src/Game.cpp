@@ -37,6 +37,8 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
 
     //Inicio la bola
     bola.Init();
+    //Inicio el tablero
+    tablero.init(5);
 
     bool quit = false;
     int lastTime = SDL_GetTicks();
@@ -102,6 +104,7 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
 
         //Render de cosas
         bola.Render(sur);
+        tablero.render(sur);
         for(i = 0; i<numPlayers;i++){
             palas[i]->Render(sur);
         }
@@ -139,6 +142,8 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
 
     //Inicio la bola
     bola.Init();
+    //Inicio el tablero
+    tablero.init(5);
 
     bool quit = false;
     int lastTime = SDL_GetTicks();
@@ -208,6 +213,7 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
 
         //Render de cosas
         bola.Render(sur);
+        tablero.render(sur);
         for(i = 0; i<numPlayers;i++){
             palas[i]->Render(sur);
         }
@@ -221,7 +227,7 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
 }
 
 void Game::clienteCargaDatos(char* msg){
-    //Que cargamos? la posicion de la bola, la posición de los jugadores x jugadores
+    //Que cargamos? la posicion de la bola, la posición de los jugadores x jugadores y la linea central
     sscanf(msg,"%d %d %d %d %d %d",&bola.getRect()->x,&bola.getRect()->y,&palas[0]->getRect()->x,&palas[0]->getRect()->y,&palas[1]->getRect()->x,&palas[1]->getRect()->y);
 }
 
