@@ -17,7 +17,7 @@ Bola::~Bola()
 }
 
 //Initialization
-void Bola::Init(){
+void Bola::Init(SDL_Renderer *renderer){
     rect.h = BOLA_SIZE;
     rect.w = BOLA_SIZE;
     rect.y = WIN_HEIGHT/2;
@@ -39,7 +39,8 @@ void Bola::Init(){
 		angle = rand() % 60 + 285;
 		break;
 	}
-
+    SDL_Surface *surf = IMG_Load("assets/pelota.png");
+    imagen = SDL_CreateTextureFromSurface(renderer, surf);
 
 	dx = dy = 0.0f;
 	speed = 0.4f;
@@ -213,8 +214,15 @@ void Bola::Gol(){
 
 
 //render
-void Bola::Render(SDL_Surface* surf){
-    SDL_FillRect(surf,&rect,COLOR_BOLA);
+void Bola::Render(SDL_Renderer* renderer){
+    ///SDL_FillRect(surf,&rect,COLOR_BOLA);
+    SDL_Rect srcRect;
+    srcRect.x = 0;
+    srcRect.y = 0;
+    srcRect.w = rect.w;
+    srcRect.h = rect.h;
+
+    SDL_RenderCopy(renderer, imagen, &srcRect, &rect);
 }
 
 SDL_Rect* Bola::getRect(){
