@@ -40,6 +40,11 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
     bola.Init(_gRenderer);
     //Inicio el tablero
     tablero.init(5, _gRenderer);
+    //Inicio los marcadores
+    marcador1 = new Marcador();
+    marcador1->Init(1, _gRenderer);
+    marcador2 = new Marcador();
+    marcador2->Init(2, _gRenderer);
 
     bool quit = false;
     int lastTime = SDL_GetTicks();
@@ -103,7 +108,7 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
 
 
         //Muevo Bola
-        bola.Update(palas, deltaTime);
+        bola.Update(palas, marcador1, marcador2, deltaTime);
 
 
         //Render de cosas
@@ -113,6 +118,8 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
         for(i = 0; i<numPlayers;i++){
             palas[i]->Render(_gRenderer);
         }
+        marcador1->Render(_gRenderer);
+        marcador2->Render(_gRenderer);
 
         //Servidor envia los datos a todos los clientes
         servidorEnviaDatos();
@@ -151,6 +158,11 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
     bola.Init(_gRenderer);
     //Inicio el tablero
     tablero.init(5, _gRenderer);
+    //Inicio los marcadores
+    marcador1 = new Marcador();
+    marcador1->Init(1, _gRenderer);
+    marcador2 = new Marcador();
+    marcador2->Init(2, _gRenderer);
 
     bool quit = false;
     int lastTime = SDL_GetTicks();
@@ -227,6 +239,8 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
         for(i = 0; i<numPlayers;i++){
             palas[i]->Render(_gRenderer);
         }
+        marcador1->Render(_gRenderer);
+        marcador2->Render(_gRenderer);
 
         //Envio direccion al servidor
         red.clienteEnviaDireccion(playerNumber, (int)dir);
@@ -238,13 +252,17 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
 }
 
 void Game::clienteCargaDatos(char* msg){
+    int score1 = 0, score2 = 0;
     //Que cargamos? la posicion de la bola, la posición de los jugadores x jugadores y la linea central
-    sscanf(msg,"%d %d %d %d %d %d",&bola.getRect()->x,&bola.getRect()->y,&palas[0]->getRect()->x,&palas[0]->getRect()->y,&palas[1]->getRect()->x,&palas[1]->getRect()->y);
+    sscanf(msg,"%d %d %d %d %d %d %d %d",&bola.getRect()->x,&bola.getRect()->y,&palas[0]->getRect()->x,&palas[0]->getRect()->y,&palas[1]->getRect()->x,&palas[1]->getRect()->y, &score1, &score2);
+
+    marcador1->setScore(score1);
+    marcador2->setScore(score2);
 }
 
 void Game::servidorEnviaDatos(){
     char datos_enviar[MAX_BUFFER];
-    sprintf(datos_enviar,"%d %d %d %d %d %d",bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y,palas[1]->getRect()->x,palas[1]->getRect()->y);
+    sprintf(datos_enviar,"%d %d %d %d %d %d %d %d",bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y,palas[1]->getRect()->x,palas[1]->getRect()->y, marcador1->getScore(), marcador2->getScore());
 
     red.servidorEnviaDatosATodos(datos_enviar);
 }

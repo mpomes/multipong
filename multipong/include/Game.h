@@ -6,6 +6,7 @@
 #include "Pala.h"
 #include "Bola.h"
 #include "Tablero.h"
+#include "Marcador.h"
 #include <vector>
 
 
@@ -33,6 +34,8 @@ class Game
         std::vector<Pala*> palas;
         Bola bola;
         Tablero tablero;
+        Marcador *marcador1;
+        Marcador *marcador2;
 
 };
 
