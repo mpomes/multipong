@@ -79,7 +79,7 @@ void Bola::InitMedia(){
 }
 
 //Update para la IA
-void Bola::Update(std::vector<Pala*>palas, float deltaTime){
+void Bola::Update(std::vector<Pala*>palas, Marcador *marcador1, Marcador *marcador2, float deltaTime){
     //Si no esta ya rebotando (efecto bullet), rebota contra la pared
     if (!rebotandoY){
         if (rect.y + rect.h >= WIN_HEIGHT || rect.y <= 0){
@@ -181,9 +181,13 @@ void Bola::Update(std::vector<Pala*>palas, float deltaTime){
 
     if(rect.x < 0 ){
         std::cout << "Punto Equipo 2" << std::endl;
+        if (marcador2->getScore() < MAX_SCORE)
+            marcador2->incrementScore(1);
         Gol();
     }else if(rect.x > WIN_WIDTH){
         std::cout << "Punto Equipo 1" << std::endl;
+        if (marcador1->getScore() < MAX_SCORE)
+            marcador1->incrementScore(1);
         Gol();
     }
 }
